@@ -7,10 +7,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<IProductService,ProductService>();
 string? azureAppConfigString = builder.Configuration.GetValue<string>("AzureAppConfiguration");
 
-builder.Host.ConfigureAppConfiguration(x =>
-{
-    x.AddAzureAppConfiguration(azureAppConfigString);
-});
+builder.Configuration.AddAzureAppConfiguration(azureAppConfigString);
 
 var app = builder.Build();
 
