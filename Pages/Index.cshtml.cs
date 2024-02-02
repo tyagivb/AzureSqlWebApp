@@ -25,7 +25,6 @@ namespace AzureSqlWebApp.Pages
             }
             catch (Exception ex)
             {
-
                 _logger.LogError($"Exception in Index Page {ex.ToString()}");
             }
            
