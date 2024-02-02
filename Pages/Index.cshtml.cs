@@ -19,7 +19,16 @@ namespace AzureSqlWebApp.Pages
 
         public void OnGet()
         {
-            Products = _productService.GetProducts();
+            try
+            {
+                Products = _productService.GetProducts();
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError($"Exception in Index Page {ex.ToString()}");
+            }
+           
         }
     }
 }
