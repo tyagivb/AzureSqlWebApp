@@ -1,4 +1,5 @@
 using AzureSqlWebApp.Services;
+using Microsoft.FeatureManagement;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,8 +8,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<IProductService,ProductService>();
 string? azureAppConfigString = builder.Configuration.GetValue<string>("AzureAppConfiguration");
 
-builder.Configuration.AddAzureAppConfiguration(azureAppConfigString);
-
+builder.Configuration.AddAzureAppConfiguration(options => options.Connect(azureAppConfigString).UseFeatureFlags());
+builder.Services.AddFeatureManagement();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

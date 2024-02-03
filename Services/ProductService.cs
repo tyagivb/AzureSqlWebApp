@@ -1,4 +1,5 @@
 ﻿using AzureSqlWebApp.Models;
+using Microsoft.FeatureManagement;
 using System.Data.SqlClient;
 
 namespace AzureSqlWebApp.Services
@@ -6,14 +7,22 @@ namespace AzureSqlWebApp.Services
     public class ProductService : IProductService
     {
         private readonly IConfiguration _configuration;
-        public ProductService(IConfiguration configuration)
+        private readonly IFeatureManager _featureManager;
+       
+        public ProductService(IConfiguration configuration, IFeatureManager featureManager)
         {
             _configuration = configuration;
+            _featureManager = featureManager;
         }
         private SqlConnection GetConnection()
         {
 
             return new SqlConnection(_configuration["SQLConnection"]);
+        }
+
+        public async Task<bool> IsBetaAsync() {
+            var isBeta = await _featureManager.IsEnabledAsync("beta");
+            return isBeta;
         }
         public List<Product> GetProducts()
         {

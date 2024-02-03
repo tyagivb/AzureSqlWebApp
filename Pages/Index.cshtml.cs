@@ -10,6 +10,7 @@ namespace AzureSqlWebApp.Pages
         private readonly ILogger<IndexModel> _logger;
         private readonly IProductService _productService;
         public List<Product> Products { get; set; }
+        public bool IsBeta { get; set; }
         public IndexModel(ILogger<IndexModel> logger, IProductService productService)
         {
             _logger = logger;
@@ -17,10 +18,11 @@ namespace AzureSqlWebApp.Pages
             _productService = productService;
         }
 
-        public void OnGet()
+        public async Task OnGet()
         {
             try
             {
+                IsBeta = await _productService.IsBetaAsync();
                 Products = _productService.GetProducts();
             }
             catch (Exception ex)
