@@ -1,6 +1,8 @@
 ﻿using AzureSqlWebApp.Models;
 using Microsoft.FeatureManagement;
 using System.Data.SqlClient;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AzureSqlWebApp.Services
 {
@@ -8,11 +10,13 @@ namespace AzureSqlWebApp.Services
     {
         private readonly IConfiguration _configuration;
         private readonly IFeatureManager _featureManager;
-       
-        public ProductService(IConfiguration configuration, IFeatureManager featureManager)
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public ProductService(IConfiguration configuration, IFeatureManager featureManager, IHttpClientFactory httpClientFactory)
         {
             _configuration = configuration;
             _featureManager = featureManager;
+            _httpClientFactory = httpClientFactory;
         }
         private SqlConnection GetConnection()
         {
@@ -50,6 +54,22 @@ namespace AzureSqlWebApp.Services
             }
             _connection.Close();
             return _product_lst;
+        }
+
+        public async Task<List<Product>> GetProductsFromFunctionAppAsync()
+        {
+            string funtionUrl = "https://azfunctionapp003.azurewebsites.net/api/GetProducts?code=MS1FLGtjoKJaYVkglHz44U1GTf54fBj1x-gcq7RwB2dHAzFuEgu_TQ==";
+            using (var client = _httpClientFactory.CreateClient())
+            {
+                HttpResponseMessage data = await client.GetAsync(funtionUrl);
+
+                var content = await data.Content.ReadAsStringAsync();
+
+                var productList = JsonSerializer.Deserialize<List<Product>>(content);
+
+                return productList;
+
+            }
         }
 
     }

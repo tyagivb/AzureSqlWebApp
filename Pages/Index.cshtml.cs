@@ -23,7 +23,7 @@ namespace AzureSqlWebApp.Pages
             try
             {
                 IsBeta = await _productService.IsBetaAsync();
-                Products = _productService.GetProducts();
+                Products = await _productService.GetProductsFromFunctionAppAsync();
             }
             catch (Exception ex)
             {

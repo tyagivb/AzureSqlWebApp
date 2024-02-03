@@ -6,5 +6,6 @@ namespace AzureSqlWebApp.Services
     {
         List<Product> GetProducts();
         Task<bool> IsBetaAsync();
+        Task<List<Product>> GetProductsFromFunctionAppAsync();
     }
 }

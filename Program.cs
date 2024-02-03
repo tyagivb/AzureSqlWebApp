@@ -10,6 +10,7 @@ string? azureAppConfigString = builder.Configuration.GetValue<string>("AzureAppC
 
 builder.Configuration.AddAzureAppConfiguration(options => options.Connect(azureAppConfigString).UseFeatureFlags());
 builder.Services.AddFeatureManagement();
+builder.Services.AddHttpClient();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
